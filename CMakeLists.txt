@@ -9,4 +9,16 @@ file(GLOB SRC_FILES
     "src/*.c"
 )
 
+# Set the include directory for the generated font headers
+set(gen_dir ${ZEPHYR_BINARY_DIR}/include/generated/)
+
+# Include cfb cmake script
+include(${ZEPHYR_BASE}/cmake/cfb.cmake NO_POLICY_SCOPE)
+
+# Generate the CFB fonts
+generate_cfb_font_for_target(app fonts/04B.ttf ${gen_dir}/cfb_mono_04B.h 12 16 -s 12 --first 32 --last 126 --name cfb_custom_1)
+generate_cfb_font_for_target(app fonts/COMICBD.ttf ${gen_dir}/cfb_mono_COMICBD.h 10 16 -s 9 --first 32 --last 126 --name cfb_custom_2)
+generate_cfb_font_for_target(app fonts/MTCORSVA.ttf ${gen_dir}/cfb_mono_MTCORSVA.h 15 16 -s 14 --first 32 --last 126 --name cfb_custom_3)
+generate_cfb_font_for_target(app fonts/ITCKRIST.ttf ${gen_dir}/cfb_mono_ITCKRIST.h 11 16 -s 9 --first 32 --last 126 --name cfb_custom_4)
+
 target_sources(app PRIVATE ${SRC_FILES})

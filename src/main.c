@@ -16,6 +16,10 @@ LOG_MODULE_REGISTER(weather_assistant, LOG_LEVEL_DBG);
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/display/cfb.h>
+#include "cfb_mono_04B.h"
+#include "cfb_mono_COMICBD.h"
+#include "cfb_mono_ITCKRIST.h"
+#include "cfb_mono_MTCORSVA.h"
 
 const struct device *display_device;
 
@@ -75,10 +79,17 @@ extern void thread_display(void* v1, void *v2, void *v3){
 		cfb_framebuffer_clear(display_device, false);
 
 		// Display text in each of the 4 different lines
-		cfb_print(display_device, "Zephyr RTOS!!",0,0);
+		cfb_framebuffer_set_font(display_device, 0);
+		cfb_print(display_device, "Zephyr!!",0,0);
+
+		cfb_framebuffer_set_font(display_device, 1);
 		cfb_print(display_device, "ST & ssd1306",0,height);
-		cfb_print(display_device, ">>Project",0,2 * height);
-		cfb_print(display_device, "By Jeronimo :D",0,3 * height);
+
+		cfb_framebuffer_set_font(display_device, 2);
+		cfb_print(display_device, ">Project",0,2 * height);
+
+		cfb_framebuffer_set_font(display_device, 3);
+		cfb_print(display_device, "By Jeronimo",0,3 * height);
 
 		// Finalize frame to load it into RAM to be displayed
 		cfb_framebuffer_finalize(display_device);

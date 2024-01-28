@@ -1,7 +1,7 @@
 # Zephyr TTF fonts for CFB
 This project shows how to use True Type fonts (TTF) in Zephyr into Zephyr fonts to be used by [monochrome caracter Framebuffer (CFB)](https://docs.zephyrproject.org/apidoc/latest/group__monochrome__character__framebuffer.html) API for displays such as ssd1306.
 
-![image](images/image_1.jpeg)
+![image](images/image_2.jpeg)
 
 If you want to know everyting about CFB in Zephyr, you are in the correct repository!
 
@@ -146,6 +146,30 @@ Once the framebuffer is ready, you must called the `cfb_framebuffer_finalize` fu
 ```c
 cfb_framebuffer_finalize(display_device);
 ```
+
+![image](images/image_1.jpeg)
+
+## 🚀 Set your own True Type Fonts (TTF)
+Once you know how the CFB library works, you can add your custom fonts by TTF. It is well-kown standard created by Apple and integrated today in almost all devices. You can get your favorite fonts from websites like [dafont](https://www.dafont.com/ttf.d592) or directly from your PC.
+
+In this project I have used 4 different fonts that can be found in the `fonts` folder. To add your TTF font, you just need to drop it into that folder and modify the `CMakeLists.txt` file with the following code:
+
+```cmake
+# Set the include directory for the generated font headers
+set(gen_dir ${ZEPHYR_BINARY_DIR}/include/generated/)
+
+# Include cfb cmake script
+include(${ZEPHYR_BASE}/cmake/cfb.cmake NO_POLICY_SCOPE)
+
+# Generate the CFB fonts
+generate_cfb_font_for_target(app fonts/04B.ttf ${gen_dir}/cfb_mono_04B.h 12 16 -s 12 --first 32 --last 126 --name cfb_custom)
+```
+
+The first line sets the `gen_dir` where the header generated with the fonts will be located (it can be found under `build` folder once the code is compiled). Then, you need to include the `zephyr/cmake/cfb.cmake` script, which executes the required python script that generate the CFB font from your TTF font.
+
+The `generate_cfb_font_for_target` function has as parameters the relative path of the ttf font `fonts/04B.ttf`, the output path `${gen_dir}/cfb_mono_04B.h`, the width and height in pixels (12 and 16 respectively), the font size (12 in this case) and the starting and end character set (from space to ~). Finally, you can specify a name for the font array, it is quite useful for two reasons. Firstly, it must be unique and the default value is based on the width and heigh, so if you have fonts with same sizes, it will arise an error. Secondly, because the order of the fonts (when you use the `cfb_framebuffer_set_font` function to set it) will be ordered by the name.
+
+Finally, you can add the corresponding header (.h) file to your code and use your custom ttf font!!
 
 ## 🛠️ Build the project
 
